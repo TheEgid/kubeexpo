@@ -11,8 +11,8 @@ run: SHELL:=/bin/bash
 run:
 	@echo "Start! `date +%F--%H-%M`";	
 	@kubectl apply -f ./NEW.yaml
-	sleep 5;
-	@kubectl get svc,deploy,ingress
+	@sleep 1;
+	@kubectl get svc,deploy,ingress,rs,po 
 
 	@echo "Finished!";
 

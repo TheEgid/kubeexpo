@@ -2,9 +2,8 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: newapp
-  labels:
-    app: newapp
 spec:
+  replicas: 2
   selector:
     matchLabels:
       app: newapp
@@ -17,19 +16,24 @@ spec:
       - name: echoserver
         image: gcr.io/google-samples/hello-app:1.0
         ports:
-        - containerPort: 8080
+        - containerPort: 80
+        resources:
+          requests:
+            cpu: 10m
+            memory: 100Mi
+          limits:
+            cpu: 100m
+            memory: 100Mi
 ---
 
 
 apiVersion: v1
 kind: Service
 metadata:
-  labels:
-    app: newapp
   name: newapp
 spec:
   ports:
-  - port: 8080
+  - port: 80
     protocol: TCP
   selector:
     app: newapp
@@ -41,9 +45,8 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: newapp2
-  labels:
-    app: newapp2
 spec:
+  replicas: 2
   selector:
     matchLabels:
       app: newapp2
@@ -57,14 +60,19 @@ spec:
         image: rancher/hello-world
         ports:
         - containerPort: 80
+        resources:
+          requests:
+            cpu: 10m
+            memory: 100Mi
+          limits:
+            cpu: 100m
+            memory: 100Mi
 ---
 
 
 apiVersion: v1
 kind: Service
 metadata:
-  labels:
-    app: newapp2
   name: newapp2
 spec:
   ports:
@@ -79,7 +87,7 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: ingress-dflt
+  name: ingress-master
   annotations:
     kubernetes.io/ingress.global-static-ip-name: "ingress-dflt"
     kubernetes.io/ingress.allow-http: "true"
@@ -93,7 +101,7 @@ spec:
             service:
               name: newapp
               port: 
-                number: 8080
+                number: 80
         - path: /branch_soup
           pathType: ImplementationSpecific
           backend:
