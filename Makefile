@@ -7,14 +7,19 @@
 #http://192.168.1.71/branch_pizza
 #http://192.168.1.71/branch_soup
 
+all: SHELL:=/bin/bash
+all: run info
+	
 run: SHELL:=/bin/bash
 run:
 	@echo "Start! `date +%F--%H-%M`";	
-	@kubectl apply -f ./NEW.yaml
+	@kubectl apply -f ./NEW.yaml;
 	@sleep 1;
-	@kubectl get svc,deploy,ingress,rs,po 
-
 	@echo "Finished!";
+
+info: SHELL:=/bin/bash
+info:
+	@kubectl get svc,deploy,ingress,rs,po; 
 
 
 

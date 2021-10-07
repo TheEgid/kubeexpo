@@ -16,7 +16,7 @@ spec:
       - name: echoserver
         image: gcr.io/google-samples/hello-app:1.0
         ports:
-        - containerPort: 80
+        - containerPort: 8080
         resources:
           requests:
             cpu: 10m
@@ -33,7 +33,7 @@ metadata:
   name: newapp
 spec:
   ports:
-  - port: 80
+  - port: 8080
     protocol: TCP
   selector:
     app: newapp
@@ -101,7 +101,7 @@ spec:
             service:
               name: newapp
               port: 
-                number: 80
+                number: 8080
         - path: /branch_soup
           pathType: ImplementationSpecific
           backend:
