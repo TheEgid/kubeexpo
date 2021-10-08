@@ -13,7 +13,7 @@ all: run info
 run: SHELL:=/bin/bash
 run:
 	@echo "Start! `date +%F--%H-%M`";	
-	@kubectl apply -f ./NEW.yaml;
+	@kubectl apply -f ./Application;
 	@sleep 1;
 	@echo "Finished!";
 

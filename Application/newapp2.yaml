@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: newapp2
+  labels:
+    app: newapp2
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: newapp2
+  template:
+    metadata:
+      labels:
+        app: newapp2
+    spec:
+      containers:
+      - name: superserver
+        image: rancher/hello-world
+        ports:
+        - containerPort: 80
+        resources:
+          requests:
+            cpu: 10m
+            memory: 100Mi
+          limits:
+            cpu: 100m
+            memory: 100Mi
+---
+
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: newapp2
+  labels:
+    app: newapp2
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+  selector:
+    app: newapp2
+  type: NodePort
+---
