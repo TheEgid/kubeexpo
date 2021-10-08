@@ -1,24 +1,24 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: newapp2
+  name: sample
   labels:
-    app: newapp2
+    app: sample
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: newapp2
+      app: sample
   template:
     metadata:
       labels:
-        app: newapp2
+        app: sample
     spec:
       containers:
-      - name: superserver
-        image: rancher/hello-world
+      - name: sampleserver
+        image: cloud.canister.io:5000/theegid/sample:latest
         ports:
-        - containerPort: 80
+        - containerPort: 8080
         resources:
           requests:
             cpu: 10m
@@ -26,20 +26,21 @@ spec:
           limits:
             cpu: 100m
             memory: 100Mi
+      imagePullSecrets:
+      - name: docker-credentials    
 ---
-
 
 apiVersion: v1
 kind: Service
 metadata:
-  name: newapp2
+  name: sample
   labels:
-    app: newapp2
+    app: sample
 spec:
   ports:
-  - port: 80
+  - port: 8080
     protocol: TCP
   selector:
-    app: newapp2
+    app: sample
   type: NodePort
 ---

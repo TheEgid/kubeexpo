@@ -11,17 +11,24 @@ spec:
   rules:
     - http:
         paths:
-        - path: /branch_pizza
+        - path: /path_pizza
           pathType: ImplementationSpecific
           backend:
             service:
               name: newapp
               port: 
                 number: 8080
-        - path: /branch_soup
+        - path: /path_soup
           pathType: ImplementationSpecific
           backend:
             service:
               name: newapp2
               port: 
                 number: 80
+        - path: /path_omelet
+          pathType: ImplementationSpecific
+          backend:
+            service:
+              name: sample
+              port: 
+                number: 8080
