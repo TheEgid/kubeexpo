@@ -1,4 +1,4 @@
-FROM node:16-slim@sha256:af6f241029c4d63107c6ccbbd030c44d331786d724bd9c2e615edf46deab58e2
+FROM node:16.11-alpine
 
 # Create app directory
 WORKDIR /usr/src/app
