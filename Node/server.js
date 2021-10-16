@@ -1,7 +1,6 @@
 'use strict';
 
 const express = require('express');
-const path = require('path');
 
 // Constants
 const PORT = 8080;
@@ -16,4 +15,3 @@ app.use(function (request, response) {
 
 
 app.listen(PORT, HOST);
-
