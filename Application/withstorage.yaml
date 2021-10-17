@@ -9,7 +9,7 @@ spec:
   capacity:
     storage: 3Gi
   accessModes:
-    - ReadWriteOnce
+    - ReadWriteMany
   hostPath:
     path: "/opt/MOUNTPOINT"
 
@@ -22,7 +22,7 @@ metadata:
 spec:
   storageClassName: local-storage
   accessModes:
-    - ReadWriteOnce
+    - ReadWriteMany
   resources:
     requests:
       storage: 3Gi
