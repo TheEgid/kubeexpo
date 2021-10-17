@@ -39,3 +39,10 @@ spec:
               name: fileshare
               port:
                 number: 80
+        - path: /path_apple/files
+          pathType: ImplementationSpecific
+          backend:
+            service:
+              name: fileshare
+              port:
+                number: 80

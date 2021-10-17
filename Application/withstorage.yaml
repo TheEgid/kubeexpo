@@ -65,10 +65,36 @@ spec:
           volumeMounts:
             - name: pv-storage
               mountPath: "/usr/share/nginx/html"
+            - name: config
+              mountPath: /etc/nginx/conf.d
       volumes:
         - name: pv-storage
           persistentVolumeClaim:
             claimName: pv-claim
+        - name: config
+          configMap:
+            name: fileshare
+---
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: fileshare
+data:
+  default.conf: |
+    server {
+      listen       80 default_server;
+      server_name  _;
+      default_type text/plain;
+      location / {
+        alias /usr/share/nginx/html/;
+        autoindex on;
+        client_body_temp_path /tmp;
+        dav_methods PUT DELETE MKCOL COPY MOVE;
+        create_full_put_path on;
+        dav_access user:rw group:rw all:r;
+      }
+    }
 
 ---
 
