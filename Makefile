@@ -11,6 +11,8 @@ endif
 #http://192.168.1.71/path_pizza
 #http://192.168.1.71/path_soup
 #http://192.168.1.71/path_omelet
+#http://192.168.1.71/path_apple
+
 
 createsecret: SHELL:=/bin/bash
 createsecret:
@@ -33,12 +35,23 @@ all: run info
 
 run: SHELL:=/bin/bash
 run:
-	@echo "Start! `date +%F--%H-%M`";	
-	@kubectl apply -f ./Application;
+	@echo "Start! `date +%F--%H-%M`";
+
+	@sudo mkdir -p /opt/MOUNTPOINT/path_apple/;
+	@sudo sh -c "echo '<!DOCTYPE html><H1> Hello from K8 storage</H1>' > /opt/MOUNTPOINT/path_apple/index.html";
+
 	@sleep 1;
+	@kubectl apply -f ./Application;
+
 	@echo "Finished!";
 
 
 info: SHELL:=/bin/bash
 info:
 	@kubectl get svc,deploy,ingress,rs,po; 
+
+
+clear: SHELL:=/bin/bash
+clear:
+	@kubectl delete -f ./Application;
+
