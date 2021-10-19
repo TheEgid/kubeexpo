@@ -12,7 +12,7 @@ endif
 #http://192.168.1.71/path_soup
 #http://192.168.1.71/path_omelet
 #http://192.168.1.71/path_apple
-
+#http://192.168.1.71/path_apple/new
 
 createsecret: SHELL:=/bin/bash
 createsecret:
@@ -38,7 +38,9 @@ run:
 	@echo "Start! `date +%F--%H-%M`";
 
 	@sudo mkdir -p /opt/MOUNTPOINT/path_apple/;
-	@sudo sh -c "echo '<!DOCTYPE html><H1> Hello from K8 storage</H1>' > /opt/MOUNTPOINT/path_apple/index.html";
+	@sudo mkdir -p /opt/MOUNTPOINT/path_apple/new;
+	@sudo sh -c "echo '<!DOCTYPE html><H1> Hello from root storage</H1>' > /opt/MOUNTPOINT/path_apple/index.html";
+	@sudo sh -c "echo '<!DOCTYPE html><H1> Hello from brahch storage</H1>' > /opt/MOUNTPOINT/path_apple/new/index.html";
 
 	@sleep 1;
 	@kubectl apply -f ./Application;

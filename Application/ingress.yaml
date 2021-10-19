@@ -12,35 +12,28 @@ spec:
     - http:
         paths:
         - path: /path_pizza
-          pathType: ImplementationSpecific
+          pathType: Prefix
           backend:
             service:
               name: newapp
               port: 
                 number: 8080
         - path: /path_soup
-          pathType: ImplementationSpecific
+          pathType: Prefix
           backend:
             service:
               name: newapp2
               port: 
                 number: 80
         - path: /path_omelet
-          pathType: ImplementationSpecific
+          pathType: Prefix
           backend:
             service:
               name: sample
               port: 
                 number: 8080
         - path: /path_apple
-          pathType: ImplementationSpecific
-          backend:
-            service:
-              name: fileshare
-              port:
-                number: 80
-        - path: /path_apple/files
-          pathType: ImplementationSpecific
+          pathType: Prefix
           backend:
             service:
               name: fileshare
