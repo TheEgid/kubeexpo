@@ -141,6 +141,8 @@ pip-selfcheck.json
 # Local History for Visual Studio Code
 .history/
 
+
+.idea/*
 .idea/.gitignore
 .idea/jsLibraryMappings.xml
 .idea/kubeexpo.iml
