@@ -1,0 +1,5 @@
+{
+  "eslint.workingDirectories": ["Node"],
+  "npm.packageManager": "pnpm",
+  "files.eol": "\n"
+}

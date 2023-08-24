@@ -1,4 +1,3 @@
-
 ifneq (,$(wildcard ./.env))
     include .env
     export
@@ -8,11 +7,11 @@ endif
 
 # @echo "Free HDD space: `df -h /home|tail -n1|awk '{print $4}'`";
 
-#http://192.168.1.71/path_pizza
-#http://192.168.1.71/path_soup
-#http://192.168.1.71/path_omelet
-#http://192.168.1.71/path_apple
-#http://192.168.1.71/path_apple/new
+#http://192.168.1.84/path_pizza
+#http://192.168.1.84/path_soup
+#http://192.168.1.84/path_omelet
+#http://192.168.1.84/path_apple
+#http://192.168.1.84/path_apple/new
 
 createsecret: SHELL:=/bin/bash
 createsecret:
@@ -50,10 +49,9 @@ run:
 
 info: SHELL:=/bin/bash
 info:
-	@kubectl get svc,deploy,ingress,rs,po; 
+	@kubectl get svc,deploy,ingress,rs,po;
 
 
 clear: SHELL:=/bin/bash
 clear:
 	@kubectl delete -f ./Application;
-

@@ -1,20 +1,27 @@
-FROM node:16.11-alpine
+FROM node:20-bookworm-slim
 
-# Create app directory
-WORKDIR /usr/src/app
+RUN apt-get update && apt-get install -y curl
 
-# Install app dependencies
-# A wildcard is used to ensure both package.json AND package-lock.json are copied
-# where available (npm@5+)
-COPY package*.json ./
+WORKDIR /app
 
-RUN npm install
+RUN npx playwright install --with-deps chromium
 
-# If you are building your code for production
-# RUN npm ci --only=production
+COPY package.json pnpm-lock.yaml ./
 
-# Bundle app source
-COPY . .
+RUN npm install pnpm -g
 
-EXPOSE 8080
-CMD [ "node", "server.js" ]
+RUN pnpm install --frozen-lockfile
+
+COPY ./ ./
+
+EXPOSE 3007
+
+ENV NODE_ENV production
+
+ENV NEXT_TELEMETRY_DISABLED 1
+
+RUN pnpm prisma generate
+
+RUN pnpm build
+
+CMD ["pnpm", "start"]
