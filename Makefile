@@ -1,57 +1,45 @@
-ifneq (,$(wildcard ./.env))
-    include .env
-    export
-endif
 
-# DATADIR=\/opt/backup/
-
-# @echo "Free HDD space: `df -h /home|tail -n1|awk '{print $4}'`";
-
-#http://192.168.1.84/path_pizza
-#http://192.168.1.84/path_soup
-#http://192.168.1.84/path_omelet
-#http://192.168.1.84/path_apple
-#http://192.168.1.84/path_apple/new
-
-createsecret: SHELL:=/bin/bash
-createsecret:
-	@kubectl create secret docker-registry docker-credentials \
-	--docker-username=$(DOCKER_USERNAME1) \
-	--docker-password=$(DOCKER_PASSWORD1) \
-	--docker-email=$(DOCKER_EMAIL1) \
-	--docker-server=$(DOCKER_SERVER1);
+all: build apply start
 
 
-dockercreate: SHELL:=/bin/bash
-dockercreate:
-	@docker build ./Node -t cloud.canister.io:5000/theegid/sample;
-	@docker push cloud.canister.io:5000/theegid/sample;
+build:
+	minikube image build -t node-probe ./Application;
+	minikube image ls
 
 
-all: SHELL:=/bin/bash
-all: run info
+apply:
+	kubectl apply -f ./kube-entities.yaml
 
 
-run: SHELL:=/bin/bash
-run:
-	@echo "Start! `date +%F--%H-%M`";
-
-	@sudo mkdir -p /opt/MOUNTPOINT/path_apple/;
-	@sudo mkdir -p /opt/MOUNTPOINT/path_apple/new;
-	@sudo sh -c "echo '<!DOCTYPE html><H1> Hello from root storage</H1>' > /opt/MOUNTPOINT/path_apple/index.html";
-	@sudo sh -c "echo '<!DOCTYPE html><H1> Hello from brahch storage</H1>' > /opt/MOUNTPOINT/path_apple/new/index.html";
-
-	@sleep 1;
-	@kubectl apply -f ./Application;
-
-	@echo "Finished!";
+start:
+	sudo service nginx start;
+	./nginx.fresh.sh
 
 
-info: SHELL:=/bin/bash
-info:
-	@kubectl get svc,deploy,ingress,rs,po;
+stop:
+	sudo service nginx stop
 
 
-clear: SHELL:=/bin/bash
-clear:
-	@kubectl delete -f ./Application;
+get_ip:
+	minikube ip
+
+
+view_logs:
+	kubectl logs --selector app=first-app --v=3
+		#tail -f /var/log/nginx/access.log
+		#tail -f /var/log/nginx/error.log
+
+healthz:
+	kubectl describe pods first-ap
+
+
+delete:
+	minikube delete --all;
+	# kubectl delete all,ingress --all
+
+
+
+# 	minikube tunnel --bind-address='0.0.0.0'
+
+# stop:
+# 	sudo kill -9 $(sudo ps aux | grep 'minikube tunnel --bind-address' | awk '{print $2}')

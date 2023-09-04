@@ -1,0 +1,49 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: first-app
+spec:
+  selector:
+    matchLabels:
+      app: first-app
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: first-app
+    spec:
+      containers:
+        - name: node-probe
+          image: node-probe:latest
+          startupProbe:
+            httpGet:
+              path: /api/healthcheck
+              port: 8080
+            initialDelaySeconds: 25
+            periodSeconds: 3
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8080
+          # resources:
+          #   requests:
+          #     cpu: 50m
+          #     memory: 75Mi
+          #   limits:
+          #     cpu: 100m
+          #     memory: 150Mi
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: node-probe-service
+spec:
+  selector:
+    app: first-app
+  ports:
+    - protocol: "TCP"
+      port: 8080
+      targetPort: 8080
+      nodePort: 32000
+  type: LoadBalancer

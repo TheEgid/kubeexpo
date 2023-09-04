@@ -1,5 +1,5 @@
 {
-  "eslint.workingDirectories": ["Node"],
+  "eslint.workingDirectories": ["Application"],
   "npm.packageManager": "pnpm",
   "files.eol": "\n"
 }

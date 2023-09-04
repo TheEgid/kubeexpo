@@ -8,11 +8,11 @@ $folderName = Split-Path $scriptGrandParentDirectory -Leaf
 $src = $scriptGrandParentDirectory + "\"
 $dst = [Environment]::GetFolderPath("Desktop") + "\" + $folderName + "\"
 
-$esx1 = $src + "Node\node_modules"
+$esx1 = $src + "Application\node_modules"
 $esx2 = $src + ".git"
 $esx3 = $src + ".vscode"
-$esx4 = $src + "Node\.next"
-$esx5 = $src + "Node\build"
+$esx4 = $src + "Application\.next"
+$esx5 = $src + "Application\build"
 
 robocopy $src $dst /MT:12 /MIR /XA:SH /XD $esx1 /XD $esx2 /XD $esx3 /XD $esx4 /XD $esx5 /XJD /NFL /NDL
 
