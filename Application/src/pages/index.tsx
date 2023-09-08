@@ -14,7 +14,7 @@ export default function Home() {
                 <div className="hello">
                     <div className="chil">HO HO HO 🚜🚜🚜</div>
                     <EmptyLine />
-                    <div className="chil">Hi privated</div>
+                    <div className="chil">Hi privated {process.env.NEXT_PUBLIC_DB_NAME_DEV}</div>
                 </div>
             </main>
         </>

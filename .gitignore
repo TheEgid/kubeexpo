@@ -41,3 +41,5 @@ Application/.eslintcache
 Application/build/*
 
 Application/.next
+
+.env
