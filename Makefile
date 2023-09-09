@@ -3,15 +3,17 @@ all: build apply start
 
 
 build:
-# @rm -f ./backend/.env
-# @echo $(NEXT_PUBLIC_DB_NAME_DEV);
-# @cat .env > ./backend/.env
-	minikube image build -t node-probe ./Application;
+# rm -f ./.env
+# cat ./Application/.env > ./.env
+# echo $(NEXT_PUBLIC_DB_NAME_DEV);
+	kubectl create secret generic my-db-secret --from-env-file=./Application/.env --dry-run=client -o yaml | kubectl apply -f -
+	minikube image build -t node-js-app-container ./Application;
+	minikube image build -t postgres-db-container ./Postgres;
 	minikube image ls
 
 
 apply:
-	kubectl create secret generic my-db-secret --from-env-file=.env --dry-run=client -o yaml | kubectl apply -f -
+	kubectl create secret generic my-db-secret --from-env-file=./Application/.env --dry-run=client -o yaml | kubectl apply -f -
 	kubectl apply -f ./kube-entities.yaml
 
 
@@ -29,32 +31,24 @@ stop:
 
 
 logs:
-	kubectl logs --selector app=first-app --v=3
+	kubectl logs --selector app=node-js-app --v=3
 #tail -f /var/log/nginx/access.log
 #tail -f /var/log/nginx/error.log
 #kubectl logs postgresql-db-0
 
 
 healthz:
-	kubectl describe pods first-ap
+	kubectl describe pods node-js-app
 
 
 delete:
 	minikube delete --all;
 	# kubectl delete all,ingress --all
 
-# ifneq (,$(wildcard ./.env))
-#     include .env
-#     export
-# endif
 
-# createsecret: SHELL:= /bin/zsh
-# createsecret:
-# 	@/var/lib/snapd/snap/bin/microk8s.kubectl create secret docker-registry docker-credentials \
-# 	--docker-username=$(DOCKER_USERNAME1) \
-# 	--docker-password=$(DOCKER_PASSWORD1) \
-# 	--docker-email=$(DOCKER_EMAIL1) \
-# 	--docker-server=$(DOCKER_SERVER1);
+k9s:
+	k9s
+
 
 # 	minikube tunnel --bind-address='0.0.0.0'
 

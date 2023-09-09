@@ -43,3 +43,5 @@ Application/build/*
 Application/.next
 
 .env
+
+Application/.env

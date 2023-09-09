@@ -1,45 +1,29 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: first-app
+  name: node-js-app
 spec:
   selector:
     matchLabels:
-      app: first-app
+      app: node-js-app
   replicas: 2
   template:
     metadata:
       labels:
-        app: first-app
+        app: node-js-app
     spec:
       containers:
-      - name: node-probe
-        image: node-probe:latest
+      - name: node-js-app-container
+        image: node-js-app-container:latest
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 8080
         startupProbe:
           httpGet:
             path: /api/healthcheck
             port: 8080
           initialDelaySeconds: 25
           periodSeconds: 3
-        imagePullPolicy: Never
-        ports:
-        - containerPort: 8080
-        env:
-        - name: POSTGRES_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: my-db-secret
-              key: DB_PASSWORD_DEV
-        - name: POSTGRES_USER
-          valueFrom:
-            secretKeyRef:
-              name: my-db-secret
-              key: DB_USER_DEV
-        - name: POSTGRES_DB
-          valueFrom:
-            secretKeyRef:
-              name: my-db-secret
-              key: DB_NAME_DEV
 #   requests:
 #     cpu: 50m
 #     memory: 75Mi
@@ -51,30 +35,16 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: node-probe-service
+  name: node-js-app-service
 spec:
   selector:
-    app: first-app
+    app: node-js-app
   ports:
   - protocol: "TCP"
     port: 8080
     targetPort: 8080
     nodePort: 32000
   type: LoadBalancer
-
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: postgres-db-lb
-spec:
-  selector:
-    app: postgresql-db
-  type: LoadBalancer
-  ports:
-  - protocol: "TCP"
-    port: 5432
-    targetPort: 5432
 
 ---
 apiVersion: apps/v1
@@ -93,9 +63,9 @@ spec:
         app: postgresql-db
     spec:
       containers:
-      - name: postgresql-db
-        image: postgres:latest
-        imagePullPolicy: IfNotPresent
+      - name: postgres-db-container
+        image: postgres-db-container:latest
+        imagePullPolicy: Never
         ports:
         - containerPort: 5432
         volumeMounts:
@@ -106,17 +76,17 @@ spec:
           valueFrom:
             secretKeyRef:
               name: my-db-secret
-              key: DB_PASSWORD_DEV
+              key: NEXT_PUBLIC_DB_PASSWORD_DEV
         - name: POSTGRES_USER
           valueFrom:
             secretKeyRef:
               name: my-db-secret
-              key: DB_USER_DEV
+              key: NEXT_PUBLIC_DB_USER_DEV
         - name: POSTGRES_DB
           valueFrom:
             secretKeyRef:
               name: my-db-secret
-              key: DB_NAME_DEV
+              key: NEXT_PUBLIC_DB_NAME_DEV
   volumeClaimTemplates:
   - metadata:
       name: postgresql-db-disk
@@ -125,3 +95,17 @@ spec:
       resources:
         requests:
           storage: 1Gi
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-db-service
+spec:
+  selector:
+    app: postgresql-db
+  type: LoadBalancer
+  ports:
+  - protocol: "TCP"
+    port: 5432
+    targetPort: 5432
